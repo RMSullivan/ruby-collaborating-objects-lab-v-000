@@ -12,6 +12,10 @@ class Artist
     @@all
   end
 
+  def add_song(song)
+      @songs << song
+    end
+    
   def songs
     Song.find_by_artist(self)
   end
