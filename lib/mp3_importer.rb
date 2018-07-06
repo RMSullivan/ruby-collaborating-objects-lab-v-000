@@ -1,38 +1,15 @@
-class Artist
-  @@all = []
-  attr_accessor :name, :songs
+class MP3Importer
+  attr_reader :path
 
-  def initialize(name)
-    @name = name
-    @songs = []
+  def initialize(path)
+    @path = path
   end
 
-  def self.all
-    @@all
+  def files
+    @files ||= Dir.glob("#{path}/*.mp3").collect{ |f| f.gsub("#{path}/", "") }
   end
 
-  def add_song(song)
-    @songs << song
-  end
-
-  def self.find_or_create_by_name(name)
-    self.find(name) ? self.find(name) : self.create(name)
-  end
-
-  def self.find(name)
-    self.all.find {|artist| artist.name == name }
-  end
-
-
-  def self.create(name)
-    self.new(name).tap {|artist| artist.save}
-  end
-
-  def save
-    @@all << self
-  end
-
-  def print_songs
-    songs.each {|song| puts song.name}
+  def import
+    files.each{|f| Song.new_by_filename(f)}
   end
 end
